@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" />
+  <title>Aplikacja Pogodowa</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 600px;
+      margin: 2rem auto;
+      padding: 1rem;
+      line-height: 1.4;
+    }
+    h2 { text-align: center; }
+    select, button {
+      padding: 0.5em 1em;
+      margin: 0.5em 0.5em 0.5em 0;
+      font-size: 1em;
+    }
+    #controls {
+      text-align: center;
+    }
+    #weatherInfo table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1em;
+    }
+    #weatherInfo th, #weatherInfo td {
+      border: 1px solid #ccc;
+      padding: 0.5em;
+      text-align: center;
+    }
+    #sun {
+      text-align: center;
+      margin-top: 1em;
+    }
+    #error {
+      color: crimson;
+      margin-top: 1em;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <h2>Wybierz kraj i miasto</h2>
+  <div id="controls">
+    <select id="country">
+      <option value="Polska">Polska</option>
+      <option value="Hiszpania">Hiszpania</option>
+      <option value="Francja">Francja</option>
+    </select>
+    <select id="city"></select>
+    <button id="btn">Pokaż pogodę</button>
+  </div>
+
+  <div id="weatherInfo"></div>
+  <div id="sun"></div>
+  <div id="error"></div>
+
+  <script>
+    const COUNTRY_MAP = {
+      Polska:    ["Rzeszów", "Tychy", "Szczecin"],
+      Hiszpania: ["Bilbao", "Sewilla", "Madryt"],
+      Francja:   ["Montpellier", "Lyon", "Strasburg"]
+    };
+
+    const countrySel = document.getElementById("country");
+    const citySel    = document.getElementById("city");
+    const errorDiv   = document.getElementById("error");
+    const infoDiv    = document.getElementById("weatherInfo");
+    const sunDiv     = document.getElementById("sun");
+    const btn        = document.getElementById("btn");
+
+    function updateCities() {
+      const k = countrySel.value;
+      citySel.innerHTML = COUNTRY_MAP[k]
+        .map(c => `<option>${c}</option>`)
+        .join("");
+    }
+
+    countrySel.addEventListener("change", updateCities);
+    updateCities();  // pierwsze załadowanie
+
+    btn.addEventListener("click", getWeather);
+
+    async function getWeather() {
+      const city = citySel.value;
+      errorDiv.textContent = "";
+      infoDiv.innerHTML = "Ładowanie…";
+      sunDiv.textContent  = "";
+
+      try {
+        const resp = await fetch("/weather", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ city })
+        });
+        const data = await resp.json();
+        if (data.error) {
+          infoDiv.innerHTML = "";
+          errorDiv.textContent = data.error;
+          return;
+        }
+
+        const sunrise = new Date(data.sunrise).toLocaleTimeString("pl-PL");
+        const sunset  = new Date(data.sunset).toLocaleTimeString("pl-PL");
+        sunDiv.innerHTML = `
+          🌅 Wschód słońca: <strong>${sunrise}</strong>
+          &nbsp;&nbsp;🌇 Zachód słońca: <strong>${sunset}</strong>
+        `;
+
+        const { date, day, night } = data;
+        infoDiv.innerHTML = `
+          <h3>Pogoda w ${city} – ${date}</h3>
+          <table>
+            <tr>
+              <th>Faza</th><th>Temp min</th><th>Temp max</th><th>Opady (mm)</th>
+            </tr>
+            <tr>
+              <td>Dzień</td>
+              <td>${day.temp_min}°C</td>
+              <td>${day.temp_max}°C</td>
+              <td>${day.precipitation}</td>
+            </tr>
+            <tr>
+              <td>Noc</td>
+              <td>${night.temp_min}°C</td>
+              <td>${night.temp_max}°C</td>
+              <td>${night.precipitation}</td>
+            </tr>
+          </table>
+        `;
+
+      } catch (err) {
+        infoDiv.innerHTML = "";
+        errorDiv.textContent = "Błąd sieci lub API.";
+        console.error(err);
+      }
+    }
+  </script>
+</body>
+</html>
