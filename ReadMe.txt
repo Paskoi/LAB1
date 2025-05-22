@@ -2,4 +2,4 @@ Sprawozdanie sporządzone na podstawie części obowiązkowej i nieobowiązkowej
 
 Projekt zawiera spakowany w plik zip kod, plik pdf zawierający sprawozdanie oraz 2 pliki zawierające logi konsolowe docker.
 
-Załączony został również folder pliki zawierający wszystkie pliki projektowe poza plikami node.
+Załączone zostały również pliki projektowe poza plikami node.
