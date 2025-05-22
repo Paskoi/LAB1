@@ -1,0 +1,191 @@
+PS C:\Users\pasko\downloads\weather_app> docker image ls weather_app:1.0
+REPOSITORY    TAG       IMAGE ID       CREATED         SIZE
+weather_app   1.0       761a1625d782   4 minutes ago   187MB
+PS C:\Users\pasko\downloads\weather_app> ^C
+PS C:\Users\pasko\downloads\weather_app> ^C
+PS C:\Users\pasko\downloads\weather_app> docker buildx create --name multiarch-builder --driver docker-container --use
+multiarch-builder
+PS C:\Users\pasko\downloads\weather_app> docker buildx inspect multiarch-builder --bootstrap
+[+] Building 5.1s (1/1) FINISHED
+ => [internal] booting buildkit                                                                          5.1s
+ => => pulling image moby/buildkit:buildx-stable-1                                                       4.4s
+ => => creating container buildx_buildkit_multiarch-builder0                                             0.7s
+Name:          multiarch-builder
+Driver:        docker-container
+Last Activity: 2025-05-22 20:30:40 +0000 UTC
+
+Nodes:
+Name:                  multiarch-builder0
+Endpoint:              desktop-linux
+Status:                running
+BuildKit daemon flags: --allow-insecure-entitlement=network.host
+BuildKit version:      v0.21.1
+Platforms:             linux/amd64, linux/amd64/v2, linux/amd64/v3, linux/arm64, linux/riscv64, linux/ppc64le, linux/s390x, linux/386, linux/arm/v7, linux/arm/v6
+Labels:
+ org.mobyproject.buildkit.worker.executor:         oci
+ org.mobyproject.buildkit.worker.hostname:         46d71c897a1a
+ org.mobyproject.buildkit.worker.network:          host
+ org.mobyproject.buildkit.worker.oci.process-mode: sandbox
+ org.mobyproject.buildkit.worker.selinux.enabled:  false
+ org.mobyproject.buildkit.worker.snapshotter:      overlayfs
+GC Policy rule#0:
+ All:            false
+ Filters:        type==source.local,type==exec.cachemount,type==source.git.checkout
+ Keep Duration:  48h0m0s
+ Max Used Space: 488.3MiB
+GC Policy rule#1:
+ All:            false
+ Keep Duration:  1440h0m0s
+ Reserved Space: 9.313GiB
+ Max Used Space: 93.13GiB
+ Min Free Space: 188.1GiB
+GC Policy rule#2:
+ All:            false
+ Reserved Space: 9.313GiB
+ Max Used Space: 93.13GiB
+ Min Free Space: 188.1GiB
+GC Policy rule#3:
+ All:            true
+ Reserved Space: 9.313GiB
+ Max Used Space: 93.13GiB
+ Min Free Space: 188.1GiB
+PS C:\Users\pasko\downloads\weather_app> ^C
+PS C:\Users\pasko\downloads\weather_app> ^C
+PS C:\Users\pasko\downloads\weather_app> docker buildx build --builder multiarch-builder --platform linux/amd64,linux/arm64 -t weather_app:multiarch --push .
+[+] Building 20.4s (27/27) FINISHED                                        docker-container:multiarch-builder
+ => [internal] load build definition from Dockerfile                                                     0.0s
+ => => transferring dockerfile: 671B                                                                     0.0s 
+ => [linux/arm64 internal] load metadata for docker.io/library/node:18-alpine                            1.7s 
+ => [linux/amd64 internal] load metadata for docker.io/library/node:18-alpine                            1.6s 
+ => [auth] library/node:pull token for registry-1.docker.io                                              0.0s
+ => [internal] load .dockerignore                                                                        0.0s
+ => => transferring context: 2B                                                                          0.0s 
+ => [internal] load build context                                                                        0.2s 
+ => => transferring context: 2.83MB                                                                      0.1s 
+ => [linux/arm64 builder 1/5] FROM docker.io/library/node:18-alpine@sha256:8d6421d663b4c28fd3ebc498332f  3.4s 
+ => => resolve docker.io/library/node:18-alpine@sha256:8d6421d663b4c28fd3ebc498332f249011d118945588d0a3  0.0s 
+ => => sha256:8bfa36aa66ce614f6da68a16fb71f875da8d623310f0cb80ae1ecfa092f587f6 1.26MB / 1.26MB           0.2s 
+ => => sha256:d84c815451acbca96b6e6bdb479929222bec57121dfe10cc5b128c5c2dbaf10a 39.66MB / 39.66MB         2.4s 
+ => => sha256:02bb84e9f3412827f177bc6c020812249b32a8425d2c1858e9d71bd4c015f031 443B / 443B               0.3s
+ => => sha256:6e771e15690e2fabf2332d3a3b744495411d6e0b00b2aea64419b58b0066cf81 3.99MB / 3.99MB           0.3s
+ => => extracting sha256:6e771e15690e2fabf2332d3a3b744495411d6e0b00b2aea64419b58b0066cf81                0.1s 
+ => => extracting sha256:d84c815451acbca96b6e6bdb479929222bec57121dfe10cc5b128c5c2dbaf10a                0.6s 
+ => => extracting sha256:8bfa36aa66ce614f6da68a16fb71f875da8d623310f0cb80ae1ecfa092f587f6                0.0s
+ => => extracting sha256:02bb84e9f3412827f177bc6c020812249b32a8425d2c1858e9d71bd4c015f031                0.0s 
+ => [linux/amd64 builder 1/5] FROM docker.io/library/node:18-alpine@sha256:8d6421d663b4c28fd3ebc498332f  2.8s
+ => => resolve docker.io/library/node:18-alpine@sha256:8d6421d663b4c28fd3ebc498332f249011d118945588d0a3  0.0s 
+ => => sha256:25ff2da83641908f65c3a74d80409d6b1b62ccfaab220b9ea70b80df5a2e0549 446B / 446B               0.2s
+ => => sha256:1e5a4c89cee5c0826c540ab06d4b6b491c96eda01837f430bd47f0d26702d6e3 1.26MB / 1.26MB           0.2s 
+ => => sha256:f18232174bc91741fdf3da96d85011092101a032a93a388b79e99e69c2d5c870 3.64MB / 3.64MB           0.2s
+ => => sha256:dd71dde834b5c203d162902e6b8994cb2309ae049a0eabc4efea161b2b5a3d0e 40.01MB / 40.01MB         1.6s
+ => => extracting sha256:f18232174bc91741fdf3da96d85011092101a032a93a388b79e99e69c2d5c870                0.1s
+ => => extracting sha256:dd71dde834b5c203d162902e6b8994cb2309ae049a0eabc4efea161b2b5a3d0e                0.6s 
+ => => extracting sha256:1e5a4c89cee5c0826c540ab06d4b6b491c96eda01837f430bd47f0d26702d6e3                0.0s 
+ => => extracting sha256:25ff2da83641908f65c3a74d80409d6b1b62ccfaab220b9ea70b80df5a2e0549                0.0s
+ => [linux/amd64 builder 2/5] WORKDIR /app                                                               0.6s 
+ => [linux/arm64 builder 2/5] WORKDIR /app                                                               0.1s 
+ => [linux/amd64 builder 3/5] COPY package.json package-lock.json ./                                     0.1s
+ => [linux/arm64 builder 3/5] COPY package.json package-lock.json ./                                     0.1s 
+ => [linux/amd64 builder 4/5] RUN npm ci --only=production                                               2.3s 
+ => [linux/arm64 builder 4/5] RUN npm ci --only=production                                              12.8s 
+ => [linux/amd64 builder 5/5] COPY . .                                                                   0.1s 
+ => [linux/amd64 stage-1 3/5] COPY --from=builder /app/node_modules ./node_modules                       0.1s
+ => [linux/amd64 stage-1 4/5] COPY --from=builder /app/server.js    ./server.js                          0.0s
+ => [linux/amd64 stage-1 5/5] COPY --from=builder /app/public       ./public                             0.0s
+ => [linux/arm64 builder 5/5] COPY . .                                                                   0.1s
+ => [linux/arm64 stage-1 3/5] COPY --from=builder /app/node_modules ./node_modules                       0.1s
+ => [linux/arm64 stage-1 4/5] COPY --from=builder /app/server.js    ./server.js                          0.1s
+ => [linux/arm64 stage-1 5/5] COPY --from=builder /app/public       ./public                             0.1s 
+ => ERROR exporting to image                                                                             1.8s
+ => => exporting layers                                                                                  0.4s 
+ => => exporting manifest sha256:d5fc5335ae4e5e19c7eda060faee84531a093495d1868582847d3c20fd52ead9        0.0s
+ => => exporting config sha256:60c0d70a613d60af6f07c7a2a0530f63ab1b4a4d6294fa17dbc36790bebea3b8          0.0s 
+ => => exporting attestation manifest sha256:7383c5d32e9494aa5a5bc935d3da823e4f6bd31f6660850f5e718b78d7  0.0s
+ => => exporting manifest sha256:68695ebdf6a461b50182b21e6ea42a3cd9d4745b860b7d1b0245e8e4ca3b2c94        0.0s 
+ => => exporting config sha256:95e86838724c4617fe5029a094533ba8451caf8f4c4b9a21cddf01825c840cc7          0.0s 
+ => => exporting attestation manifest sha256:22f34472ef75f1498f6d37fc17fa04af30b2e82dd40d0cb94aef9cb1ab  0.0s 
+ => => exporting manifest list sha256:723ea8c8dbc00af410fd9d5e79ebab0e46bfd10aec76e51106f9109b9f889cc2   0.0s 
+ => => pushing layers                                                                                    1.2s 
+ => [auth] library/weather_app:pull,push token for registry-1.docker.io                                  0.0s 
+ => [auth] library/weather_app:pull,push token for registry-1.docker.io                                  0.0s 
+ => [auth] library/weather_app:pull,push token for registry-1.docker.io                                  0.0s 
+ => [auth] library/weather_app:pull,push token for registry-1.docker.io                                  0.0s 
+------
+ > exporting to image:
+------
+ERROR: failed to solve: failed to push weather_app:multiarch: push access denied, repository does not exist or may require authorization: server message: insufficient_scope: authorization failed
+
+View build details: docker-desktop://dashboard/build/multiarch-builder/multiarch-builder0/m4frloihxseug11twef9y0849
+PS C:\Users\pasko\downloads\weather_app> ^C
+PS C:\Users\pasko\downloads\weather_app> docker buildx build --builder multiarch-builder --platform linux/amd64,linux/arm64 -t paskoi/weather_app:multiarch --push .
+[+] Building 21.2s (23/23) FINISHED                                        docker-container:multiarch-builder
+ => [internal] load build definition from Dockerfile                                                     0.0s
+ => => transferring dockerfile: 671B                                                                     0.0s 
+ => [linux/amd64 internal] load metadata for docker.io/library/node:18-alpine                            0.5s 
+ => [linux/arm64 internal] load metadata for docker.io/library/node:18-alpine                            0.5s 
+ => [internal] load .dockerignore                                                                        0.0s
+ => => transferring context: 2B                                                                          0.0s 
+ => [linux/amd64 builder 1/5] FROM docker.io/library/node:18-alpine@sha256:8d6421d663b4c28fd3ebc498332f  0.0s 
+ => => resolve docker.io/library/node:18-alpine@sha256:8d6421d663b4c28fd3ebc498332f249011d118945588d0a3  0.0s 
+ => [linux/arm64 builder 1/5] FROM docker.io/library/node:18-alpine@sha256:8d6421d663b4c28fd3ebc498332f  0.0s 
+ => => resolve docker.io/library/node:18-alpine@sha256:8d6421d663b4c28fd3ebc498332f249011d118945588d0a3  0.0s 
+ => [internal] load build context                                                                        0.0s 
+ => => transferring context: 43.30kB                                                                     0.0s 
+ => CACHED [linux/arm64 builder 2/5] WORKDIR /app                                                        0.0s
+ => CACHED [linux/arm64 builder 3/5] COPY package.json package-lock.json ./                              0.0s 
+ => CACHED [linux/arm64 builder 4/5] RUN npm ci --only=production                                        0.0s 
+ => CACHED [linux/arm64 builder 5/5] COPY . .                                                            0.0s 
+ => CACHED [linux/arm64 stage-1 3/5] COPY --from=builder /app/node_modules ./node_modules                0.0s 
+ => CACHED [linux/arm64 stage-1 4/5] COPY --from=builder /app/server.js    ./server.js                   0.0s 
+ => CACHED [linux/arm64 stage-1 5/5] COPY --from=builder /app/public       ./public                      0.0s 
+ => CACHED [linux/amd64 builder 2/5] WORKDIR /app                                                        0.0s 
+ => CACHED [linux/amd64 builder 3/5] COPY package.json package-lock.json ./                              0.0s 
+ => CACHED [linux/amd64 builder 4/5] RUN npm ci --only=production                                        0.0s 
+ => CACHED [linux/amd64 builder 5/5] COPY . .                                                            0.0s 
+ => CACHED [linux/amd64 stage-1 3/5] COPY --from=builder /app/node_modules ./node_modules                0.0s 
+ => CACHED [linux/amd64 stage-1 4/5] COPY --from=builder /app/server.js    ./server.js                   0.0s 
+ => CACHED [linux/amd64 stage-1 5/5] COPY --from=builder /app/public       ./public                      0.0s 
+ => exporting to image                                                                                  20.4s 
+ => => exporting layers                                                                                  0.0s 
+ => => exporting manifest sha256:d5fc5335ae4e5e19c7eda060faee84531a093495d1868582847d3c20fd52ead9        0.0s 
+ => => exporting config sha256:60c0d70a613d60af6f07c7a2a0530f63ab1b4a4d6294fa17dbc36790bebea3b8          0.0s 
+ => => exporting attestation manifest sha256:218f6f0ad19ce73a7e47d5a0158f11dea0bed3c9e6728c7718c2e522c2  0.0s 
+ => => exporting manifest sha256:68695ebdf6a461b50182b21e6ea42a3cd9d4745b860b7d1b0245e8e4ca3b2c94        0.0s 
+ => => exporting config sha256:95e86838724c4617fe5029a094533ba8451caf8f4c4b9a21cddf01825c840cc7          0.0s 
+ => => exporting attestation manifest sha256:db7068329118271e70cab21fad1a56a61601b5ce3fd8f19522d00763ba  0.0s 
+ => => exporting manifest list sha256:1a7c35feb1dd2c627bcaa4c945267bc073b6fa28c54d32696b9379d95f48ebd4   0.0s
+ => => pushing layers                                                                                   16.5s 
+ => => pushing manifest for docker.io/paskoi/weather_app:multiarch@sha256:1a7c35feb1dd2c627bcaa4c945267  3.8s 
+ => [auth] paskoi/weather_app:pull,push token for registry-1.docker.io                                   0.0s
+
+View build details: docker-desktop://dashboard/build/multiarch-builder/multiarch-builder0/aymq9y1jcl66bgnzq080xnw3k
+PS C:\Users\pasko\downloads\weather_app> docker buildx imagetools inspect weather_app:multiarch
+ERROR: pull access denied, repository does not exist or may require authorization: server message: insufficient_scope: authorization failed
+PS C:\Users\pasko\downloads\weather_app> docker buildx imagetools inspect paskoi/weather_app:multiarch
+Name:      docker.io/paskoi/weather_app:multiarch
+MediaType: application/vnd.oci.image.index.v1+json
+Digest:    sha256:1a7c35feb1dd2c627bcaa4c945267bc073b6fa28c54d32696b9379d95f48ebd4
+
+Manifests:
+  Name:        docker.io/paskoi/weather_app:multiarch@sha256:d5fc5335ae4e5e19c7eda060faee84531a093495d1868582847d3c20fd52ead9
+  MediaType:   application/vnd.oci.image.manifest.v1+json
+  Platform:    linux/amd64
+
+  Name:        docker.io/paskoi/weather_app:multiarch@sha256:68695ebdf6a461b50182b21e6ea42a3cd9d4745b860b7d1b0245e8e4ca3b2c94
+  MediaType:   application/vnd.oci.image.manifest.v1+json
+  Platform:    linux/arm64
+
+  Name:        docker.io/paskoi/weather_app:multiarch@sha256:218f6f0ad19ce73a7e47d5a0158f11dea0bed3c9e6728c7718c2e522c2f75030
+  MediaType:   application/vnd.oci.image.manifest.v1+json
+  Platform:    unknown/unknown
+  Annotations:
+    vnd.docker.reference.digest: sha256:d5fc5335ae4e5e19c7eda060faee84531a093495d1868582847d3c20fd52ead9      
+    vnd.docker.reference.type:   attestation-manifest
+
+  Name:        docker.io/paskoi/weather_app:multiarch@sha256:db7068329118271e70cab21fad1a56a61601b5ce3fd8f19522d00763baf647f5
+  MediaType:   application/vnd.oci.image.manifest.v1+json
+  Platform:    unknown/unknown
+  Annotations:
+    vnd.docker.reference.digest: sha256:68695ebdf6a461b50182b21e6ea42a3cd9d4745b860b7d1b0245e8e4ca3b2c94      
+    vnd.docker.reference.type:   attestation-manifest
+PS C:\Users\pasko\downloads\weather_app>

@@ -1,0 +1,53 @@
+PS C:\Users\pasko> cd downloads/weather_app
+PS C:\Users\pasko\downloads\weather_app> docker build -t weather_app:1.0 .
+[+] Building 6.0s (14/14) FINISHED                                                       docker:desktop-linux
+ => [internal] load build definition from Dockerfile                                                     0.0s
+ => => transferring dockerfile: 671B                                                                     0.0s 
+ => [internal] load metadata for docker.io/library/node:18-alpine                                        1.1s 
+ => [auth] library/node:pull token for registry-1.docker.io                                              0.0s
+ => [internal] load .dockerignore                                                                        0.0s
+ => => transferring context: 2B                                                                          0.0s 
+ => [builder 1/5] FROM docker.io/library/node:18-alpine@sha256:8d6421d663b4c28fd3ebc498332f249011d11894  0.0s 
+ => => resolve docker.io/library/node:18-alpine@sha256:8d6421d663b4c28fd3ebc498332f249011d118945588d0a3  0.0s 
+ => [internal] load build context                                                                        1.2s 
+ => => transferring context: 2.83MB                                                                      1.2s
+ => CACHED [builder 2/5] WORKDIR /app                                                                    0.0s 
+ => [builder 3/5] COPY package.json package-lock.json ./                                                 0.1s 
+ => [builder 4/5] RUN npm ci --only=production                                                           2.6s 
+ => [builder 5/5] COPY . .                                                                               0.1s 
+ => [stage-1 3/5] COPY --from=builder /app/node_modules ./node_modules                                   0.1s 
+ => [stage-1 4/5] COPY --from=builder /app/server.js    ./server.js                                      0.0s 
+ => [stage-1 5/5] COPY --from=builder /app/public       ./public                                         0.1s 
+ => exporting to image                                                                                   0.4s 
+ => => exporting layers                                                                                  0.2s 
+ => => exporting manifest sha256:541d3bb16b4dbeac2e7d2b7fcca2a4e2f3a8c6b06c4f9e35b6f4fc5557299b55        0.0s 
+ => => exporting config sha256:fb6e2dbefc9c25fff09e97e261cf9a10739c9365bb7ee384bf43b7da3cda3c1a          0.0s 
+ => => exporting attestation manifest sha256:b96c1fa7ec9160f9580342b72e2bafcf396d74046d25fee8ef8b504314  0.0s 
+ => => exporting manifest list sha256:761a1625d782d4ccf89f2e26e6817b75c89e21e2d5369825785aaf244ab536e0   0.0s 
+ => => naming to docker.io/library/weather_app:1.0                                                       0.0s 
+ => => unpacking to docker.io/library/weather_app:1.0                                                    0.1s 
+
+View build details: docker-desktop://dashboard/build/desktop-linux/desktop-linux/nkd062iq4zkmkb8m8nf8eck2r    
+PS C:\Users\pasko\downloads\weather_app> docker run -d --name weather_app -p 8000:8000 weather_app:1.0
+1d26af7eec5bed8b498ea6aef0e9cc8628fa9a0424e32a4dada205c37377536f
+PS C:\Users\pasko\downloads\weather_app> ^C
+PS C:\Users\pasko\downloads\weather_app> docker logs weather_app
+[2025-05-22T20:20:00.809Z] Autor: Igor Pąśko | Nasłuchuję na :8000
+PS C:\Users\pasko\downloads\weather_app> ^C
+PS C:\Users\pasko\downloads\weather_app> docker history weather_app:1.0     
+IMAGE          CREATED         CREATED BY                                      SIZE      COMMENT
+761a1625d782   4 minutes ago   CMD ["node" "server.js"]                        0B        buildkit.dockerfile.v0
+<missing>      4 minutes ago   HEALTHCHECK &{["CMD-SHELL" "wget --quiet --s…   0B        buildkit.dockerfile.v0
+<missing>      4 minutes ago   EXPOSE map[8000/tcp:{}]                         0B        buildkit.dockerfile.v0
+<missing>      4 minutes ago   COPY /app/public ./public # buildkit            20.5kB    buildkit.dockerfile.v0
+<missing>      4 minutes ago   COPY /app/server.js ./server.js # buildkit      12.3kB    buildkit.dockerfile.v0
+<missing>      4 minutes ago   COPY /app/node_modules ./node_modules # buil…   5.19MB    buildkit.dockerfile.v0
+<missing>      6 weeks ago     WORKDIR /app                                    8.19kB    buildkit.dockerfile.v0
+<missing>      6 weeks ago     LABEL org.opencontainers.image.version=1.0.0    0B        buildkit.dockerfile.v0
+<missing>      6 weeks ago     LABEL org.opencontainers.image.title=Weather…   0B        buildkit.dockerfile.v0
+<missing>      6 weeks ago     LABEL org.opencontainers.image.authors=Igor …   0B        buildkit.dockerfile.v0
+<missing>      8 weeks ago     CMD ["node"]                                    0B        buildkit.dockerfile.v0
+<missing>      8 weeks ago     ENTRYPOINT ["docker-entrypoint.sh"]             0B        buildkit.dockerfile.v<missing>      8 weeks ago     ENV YARN_VERSION=1.22.22                        0B        buildkit.dockerfile.v0<missing>      8 weeks ago     RUN /bin/sh -c addgroup -g 1000 node     && …   122MB     buildkit.dockerfile.v0<missing>      8 weeks ago     ENV NODE_VERSION=18.20.8                        0B        buildkit.dockerfile.v0<missing>      3 months ago    CMD ["/bin/sh"]                                 0B        buildkit.dockerfile.v0<missing>      3 months ago    ADD alpine-minirootfs-3.21.3-x86_64.tar.gz /…   8.5MB     buildkit.dockerfile.v0PS C:\Users\pasko\downloads\weather_app> ^C
+PS C:\Users\pasko\downloads\weather_app> docker image ls weather_app:1.0
+REPOSITORY    TAG       IMAGE ID       CREATED         SIZE
+weather_app   1.0       761a1625d782   4 minutes ago   187MB
